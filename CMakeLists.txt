@@ -62,6 +62,5 @@ if(DOXYGEN_FOUND)
     "${CMAKE_CURRENT_BINARY_DIR}/doc/${PROJECT_NAME}"
   )
   doxygen_add_docs(${TARGET_NAME}-doc "README.md" "main.cpp" "boni.hpp")
-
-  install(DIRECTORY "${DOXYGEN_OUTPUT_DIRECTORY}" TYPE "DOC")
+  install(DIRECTORY "${DOXYGEN_OUTPUT_DIRECTORY}" TYPE "DOC" OPTIONAL)
 endif()
