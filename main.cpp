@@ -19,7 +19,7 @@ namespace pcaudiolib::impl {
 using device_deleter =
     boni::handle_deleter<audio_object*, audio_object_destroy>;
 
-} // namespace pcaudiolib::_impl
+} // namespace pcaudiolib::impl
 
 /** \brief Contains RAII wrappers for using `pcaudiolib`.
  *
@@ -149,9 +149,9 @@ public:
   ~stream() { close(); }
 
 private:
-  int open(
+  auto open(
       audio_object_format const format, uint32_t const rate,
-      uint8_t const channels) {
+      uint8_t const channels) -> int {
     return audio_object_open(parent_device, format, rate, channels);
   }
   void close() { audio_object_close(parent_device); }
@@ -160,7 +160,7 @@ private:
 
 } // namespace pcaudiolib
 
-int main(int argc, char** argv) {
+auto main(int argc, char** argv) -> int {
   if (argc != 2) {
     std::printf(
         "Plays an audio file.\n"
@@ -179,8 +179,7 @@ int main(int argc, char** argv) {
   boni::file test_file{
       audio_filename == "-"
           ? stdin // This fclose-s stdin when scope ends.
-          : std::fopen(audio_filename.c_str(), "rb")
-  };
+          : std::fopen(audio_filename.c_str(), "rb")};
   if (test_file.get() == nullptr) {
     std::fprintf(stderr, "Unable to load: %s\n", audio_filename.c_str());
     std::fflush(stderr);
