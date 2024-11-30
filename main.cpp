@@ -165,6 +165,8 @@ int main(int argc, char** argv) {
     std::printf(
         "Plays an audio file.\n"
         "Usage: pcaudiolib-exaple <audio-file>\n"
+        "\n"
+        "If audio-file is '-', read from stdin.\n"
         "The file must contain raw audio data:\n"
         "  * With Signed 16-bit PCM encoding,\n"
         "  * In Little-endian byte order,\n"
@@ -174,7 +176,11 @@ int main(int argc, char** argv) {
   }
 
   const std::string audio_filename = argv[1];
-  boni::file test_file{std::fopen(audio_filename.c_str(), "rb")};
+  boni::file test_file{
+      audio_filename == "-"
+          ? stdin // This fclose-s stdin when scope ends.
+          : std::fopen(audio_filename.c_str(), "rb")
+  };
   if (test_file.get() == nullptr) {
     std::fprintf(stderr, "Unable to load: %s\n", audio_filename.c_str());
     std::fflush(stderr);
